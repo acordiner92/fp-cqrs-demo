@@ -1,0 +1,19 @@
+{
+  "name": "fp-express",
+  "version": "1.0.0",
+  "description": "Functional programming express app",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acordiner92/fp-express.git"
+  },
+  "author": "Andrew Cordiner",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/acordiner92/fp-express/issues"
+  },
+  "homepage": "https://github.com/acordiner92/fp-express#readme"
+}
