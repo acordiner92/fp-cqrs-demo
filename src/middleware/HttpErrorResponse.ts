@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as IO from 'fp-ts/lib/IO';
 
 export const httpErrorResponse = (
   error: Error,
   _request: Request,
   response: Response,
-): IO.IO<Response> => IO.of(response.send(200).json({}));
+  _next: NextFunction,
+): IO.IO<Response> => IO.of(response.status(400).send(error));

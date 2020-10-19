@@ -3,11 +3,17 @@ import Logger from './Logger';
 import bodyParser from 'body-parser';
 import * as IO from 'fp-ts/lib/IO';
 import { routes as merchantRoutes } from './merchant/Routes';
+import { httpErrorResponse } from './middleware/HttpErrorResponse';
 
 const app = express();
 
 const setupExpress = (): IO.IO<Express> =>
-  IO.of(app.use(bodyParser.json()).get('api/v1/merchant', merchantRoutes));
+  IO.of(
+    app
+      .use(bodyParser.json())
+      .use('/api/v1/merchant', merchantRoutes)
+      .use(httpErrorResponse),
+  );
 
 // eslint-disable-next-line functional/no-expression-statement
 setupExpress();
