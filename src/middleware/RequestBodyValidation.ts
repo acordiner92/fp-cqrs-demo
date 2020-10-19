@@ -6,7 +6,7 @@ import * as t from 'io-ts';
 import ValidationError from '../error/ValidationError';
 import { PathReporter } from 'io-ts/lib/PathReporter';
 
-export const requestValidation = <A extends t.Props>(type: t.TypeC<A>) => (
+export const requestBodyValidation = <A extends t.Props>(type: t.TypeC<A>) => (
   request: Request,
   _response: Response,
   next: NextFunction,

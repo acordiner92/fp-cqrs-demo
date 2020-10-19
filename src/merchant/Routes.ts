@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { get } from './MerchantController';
-import { requestValidation } from '../middleware/RequestValidation';
+import { requestBodyValidation } from '../middleware/RequestBodyValidation';
 import * as t from 'io-ts';
 
 const User = t.type({
@@ -10,4 +10,4 @@ const User = t.type({
   email: t.string,
 });
 
-export const routes = Router().get('/', requestValidation(User), get);
+export const routes = Router().get('/', requestBodyValidation(User), get);
