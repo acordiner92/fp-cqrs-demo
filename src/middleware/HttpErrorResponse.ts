@@ -6,4 +6,9 @@ export const httpErrorResponse = (
   _request: Request,
   response: Response,
   _next: NextFunction,
-): IO.IO<Response> => IO.of(response.status(400).send(error));
+): IO.IO<Response> =>
+  IO.of(
+    response.status(400).send({
+      message: error.message,
+    }),
+  );
