@@ -1,0 +1,24 @@
+version: '3.7'
+services:
+  postgres_dev:
+    image: postgres:10.13
+    command: ['postgres', '-c', 'log_statement=all']
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: merchant
+    volumes:
+      - ./.postgres_dev:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  postgres_test:
+    image: postgres:10.13
+    command: ['postgres', '-c', 'log_statement=all']
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: merchant_test
+    volumes:
+      - ./.postgres_test:/var/lib/postgresql/data
+    ports:
+      - 5431:5432
