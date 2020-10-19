@@ -10,5 +10,6 @@ export const httpErrorResponse = (
   IO.of(
     response.status(400).send({
       message: error.message,
+      status: 400,
     }),
   );
