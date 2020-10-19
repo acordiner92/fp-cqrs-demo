@@ -1,4 +1,9 @@
+import { pipe } from 'fp-ts/lib/pipeable';
 import * as t from 'io-ts';
+import { generateDate, generateId } from '../IoUtils';
+import * as IO from 'fp-ts/lib/IO';
+import { sequenceT } from 'fp-ts/lib/Apply';
+
 export const ActivityStatus = {
   active: 'ACTIVE',
   inactive: 'INACTIVE',
@@ -27,12 +32,16 @@ export type Merchant = {
 
 type ProposedMerchant = t.TypeOf<typeof ProposedMerchant>;
 
-const create = (proposedMerchant: ProposedMerchant): Merchant => ({
-  id: 'xxx',
-  ...proposedMerchant,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  isDeleted: false,
-});
+const create = (proposedMerchant: ProposedMerchant): IO.IO<Merchant> =>
+  pipe(
+    sequenceT(IO.io)(generateId(), generateDate(), generateDate()),
+    IO.map(([id, createdAt, updatedAt]) => ({
+      id,
+      ...proposedMerchant,
+      createdAt,
+      updatedAt,
+      isDeleted: false,
+    })),
+  );
 
 export { create, ProposedMerchant };
