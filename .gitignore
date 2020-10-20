@@ -1,2 +1,4 @@
 node_modules
 .vscode
+.postgres_dev
+.postgres_test
