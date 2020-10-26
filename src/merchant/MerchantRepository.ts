@@ -1,24 +1,23 @@
 import { Merchant } from './Merchant';
 import * as TE from 'fp-ts/lib/TaskEither';
 import DatabaseError from '../error/DatabaseError';
-import { pipe } from 'fp-ts/lib/pipeable';
-import { getClient, getConnection } from '../PostgresConnection';
-import { config } from '../config/Development';
+import * as RTE from 'fp-ts/lib/ReaderTaskEither';
+import { Dependencies } from '.';
 
-export const create = (merchant: Merchant): TE.TaskEither<Error, Merchant> =>
+export const create = (
+  merchant: Merchant,
+): RTE.ReaderTaskEither<Dependencies, Error, Merchant> => deps =>
   TE.tryCatch(
     () =>
-      pipe(getClient<Merchant>(getConnection(), config.postgres), db =>
-        db.one(
-          `
+      deps.database.one(
+        `
     INSERT INTO merchant
     (id, status, currency, website_url, country, discount_percentage, is_deleted, created_at, updated_at)
     VALUES ($(id), $(status), $(currency), $(websiteUrl), 
         $(country), $(discountPercentage), $(isDeleted), $(createdAt), $(updatedAt))
     RETURNING id, status, currency, website_url, country, discount_percentage, is_deleted, created_at, updated_at
     `,
-          merchant,
-        ),
+        merchant,
       ),
     error => new DatabaseError(`${error}`),
   );
