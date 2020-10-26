@@ -3,6 +3,7 @@ import { create } from './MerchantController';
 import { requestBodyValidation } from '../middleware/RequestBodyValidation';
 import { Merchant, ProposedMerchant } from './Merchant';
 import { getClient, getConnection } from '../PostgresConnection';
+import { generateDate, generateId } from '../IoUtils';
 
 const database = getClient<Merchant>(getConnection(), {
   user: 'postgres',
@@ -14,6 +15,8 @@ const database = getClient<Merchant>(getConnection(), {
 
 const dependencies = {
   database,
+  generateId,
+  generateDate,
 };
 
 export const routes = Router().post(

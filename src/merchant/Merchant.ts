@@ -1,8 +1,9 @@
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as t from 'io-ts';
-import { generateDate, generateId } from '../IoUtils';
 import * as IO from 'fp-ts/lib/IO';
 import { sequenceT } from 'fp-ts/lib/Apply';
+import * as R from 'fp-ts/lib/Reader';
+import { Dependencies } from '.';
 
 export const ActivityStatus = {
   active: 'ACTIVE',
@@ -32,9 +33,15 @@ export type Merchant = {
 
 type ProposedMerchant = t.TypeOf<typeof ProposedMerchant>;
 
-const create = (proposedMerchant: ProposedMerchant): IO.IO<Merchant> =>
+const create = (
+  proposedMerchant: ProposedMerchant,
+): R.Reader<Dependencies, IO.IO<Merchant>> => deps =>
   pipe(
-    sequenceT(IO.io)(generateId(), generateDate(), generateDate()),
+    sequenceT(IO.io)(
+      deps.generateId(),
+      deps.generateDate(),
+      deps.generateDate(),
+    ),
     IO.map(([id, createdAt, updatedAt]) => ({
       id,
       ...proposedMerchant,
