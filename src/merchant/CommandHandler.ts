@@ -1,15 +1,16 @@
 import { pipe } from 'fp-ts/lib/pipeable';
-import { create, Merchant, ProposedMerchant } from './Merchant';
+import { create, Merchant } from './Merchant';
 import { create as createToDb } from './MerchantRepository';
 import * as RTE from 'fp-ts/lib/ReaderTaskEither';
 import * as R from 'fp-ts/lib/Reader';
 import { Dependencies } from '.';
+import { CreateMerchantCommand } from './Commands';
 
 export const createMerchant = (
-  proposedMerchant: ProposedMerchant,
+  createMerchantCommand: CreateMerchantCommand,
 ): RTE.ReaderTaskEither<Dependencies, Error, Merchant> =>
   pipe(
-    proposedMerchant,
+    createMerchantCommand,
     create,
     R.map(RTE.rightIO),
     RTE.rightReader,

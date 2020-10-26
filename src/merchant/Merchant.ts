@@ -1,23 +1,15 @@
 import { pipe } from 'fp-ts/lib/pipeable';
-import * as t from 'io-ts';
 import * as IO from 'fp-ts/lib/IO';
 import { sequenceT } from 'fp-ts/lib/Apply';
 import * as R from 'fp-ts/lib/Reader';
 import { Dependencies } from '.';
+import { CreateMerchantCommand, UpdateMerchantCommand } from './Commands';
 
 export const ActivityStatus = {
   active: 'ACTIVE',
   inactive: 'INACTIVE',
 };
 export type ActivityStatus = typeof ActivityStatus[keyof typeof ActivityStatus];
-
-const ProposedMerchant = t.type({
-  status: t.string,
-  currency: t.string,
-  websiteUrl: t.string,
-  country: t.string,
-  discountPercentage: t.number,
-});
 
 export type Merchant = {
   readonly id: string;
@@ -31,10 +23,8 @@ export type Merchant = {
   readonly isDeleted: boolean;
 };
 
-export type ProposedMerchant = t.TypeOf<typeof ProposedMerchant>;
-
 export const create = (
-  proposedMerchant: ProposedMerchant,
+  createMerchantCommand: CreateMerchantCommand,
 ): R.Reader<Dependencies, IO.IO<Merchant>> => deps =>
   pipe(
     sequenceT(IO.io)(
@@ -44,7 +34,7 @@ export const create = (
     ),
     IO.map(([id, createdAt, updatedAt]) => ({
       id,
-      ...proposedMerchant,
+      ...createMerchantCommand,
       createdAt,
       updatedAt,
       isDeleted: false,
@@ -52,14 +42,14 @@ export const create = (
   );
 
 export const update = (
-  merchantToUpdate: ProposedMerchant,
+  updateMerchantCommand: UpdateMerchantCommand,
   existingMerchant: Merchant,
 ): R.Reader<Dependencies, IO.IO<Merchant>> => deps =>
   pipe(
     deps.generateDate(),
     IO.map(updatedAt => ({
       ...existingMerchant,
-      ...merchantToUpdate,
+      ...updateMerchantCommand,
       updatedAt,
     })),
   );
