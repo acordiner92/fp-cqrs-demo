@@ -31,9 +31,9 @@ export type Merchant = {
   readonly isDeleted: boolean;
 };
 
-type ProposedMerchant = t.TypeOf<typeof ProposedMerchant>;
+export type ProposedMerchant = t.TypeOf<typeof ProposedMerchant>;
 
-const create = (
+export const create = (
   proposedMerchant: ProposedMerchant,
 ): R.Reader<Dependencies, IO.IO<Merchant>> => deps =>
   pipe(
@@ -51,4 +51,20 @@ const create = (
     })),
   );
 
-export { create, ProposedMerchant };
+export const update = (
+  merchantToUpdate: ProposedMerchant,
+  existingMerchant: Merchant,
+): R.Reader<Dependencies, IO.IO<Merchant>> => deps =>
+  pipe(
+    deps.generateDate(),
+    IO.map(updatedAt => ({
+      ...existingMerchant,
+      ...merchantToUpdate,
+      updatedAt,
+    })),
+  );
+
+export const remove = (existingMerchant: Merchant): Merchant => ({
+  ...existingMerchant,
+  isDeleted: true,
+});

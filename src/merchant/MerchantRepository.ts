@@ -21,3 +21,20 @@ export const create = (
       ),
     error => new DatabaseError(`${error}`),
   );
+
+export const update = (
+  merchant: Merchant,
+): RTE.ReaderTaskEither<Dependencies, Error, null> => deps =>
+  TE.tryCatch(
+    () =>
+      deps.database.none(
+        `
+  UPDATE merchant
+  SET status=$(status), currency=$(currency), website_url=$(websiteUrl), country=$(country), 
+  discount_percentage=$(discountPercentage), updated_at=$(updatedAt), is_deleted=$(isDeleted)
+  WHERE id=$(id)
+  `,
+        merchant,
+      ),
+    error => new DatabaseError(`${error}`),
+  );
