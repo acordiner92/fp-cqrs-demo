@@ -2,11 +2,15 @@ import { Merchant } from './Merchant';
 import * as TE from 'fp-ts/lib/TaskEither';
 import DatabaseError from '../error/DatabaseError';
 import * as RTE from 'fp-ts/lib/ReaderTaskEither';
-import { Dependencies } from '.';
+import { CreateMerchantCommandDependencies } from '.';
 
 export const create = (
   merchant: Merchant,
-): RTE.ReaderTaskEither<Dependencies, Error, Merchant> => deps =>
+): RTE.ReaderTaskEither<
+  CreateMerchantCommandDependencies,
+  Error,
+  Merchant
+> => deps =>
   TE.tryCatch(
     () =>
       deps.database.one(
@@ -24,7 +28,11 @@ export const create = (
 
 export const update = (
   merchant: Merchant,
-): RTE.ReaderTaskEither<Dependencies, Error, null> => deps =>
+): RTE.ReaderTaskEither<
+  CreateMerchantCommandDependencies,
+  Error,
+  null
+> => deps =>
   TE.tryCatch(
     () =>
       deps.database.none(
