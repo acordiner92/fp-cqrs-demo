@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   postgres_dev:
-    image: postgres:10.13
+    image: postgres:13.0
     command: ['postgres', '-c', 'log_statement=all']
     environment:
       POSTGRES_USER: postgres
@@ -22,3 +22,26 @@ services:
       - ./.postgres_test:/var/lib/postgresql/data
     ports:
       - 5431:5432
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+    environment:
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.9.1
+    ports:
+      - 5601:5601
+    networks:
+      - esnet
+
+volumes:
+  elasticsearch:
+    driver: local
+
+networks:
+  esnet:
