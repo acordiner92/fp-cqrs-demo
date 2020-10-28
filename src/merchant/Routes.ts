@@ -1,9 +1,11 @@
 import { Router } from 'express';
-import { create } from './MerchantController';
+import { create, getById } from './MerchantController';
 import { requestBodyValidation } from '../middleware/RequestBodyValidation';
-import { Merchant, ProposedMerchant } from './Merchant';
+import { Merchant } from './Merchant';
+import { CreateMerchantCommand } from './Commands';
 import { getClient, getConnection } from '../PostgresConnection';
 import { generateDate, generateId } from '../IoUtils';
+import { Client } from '@elastic/elasticsearch';
 
 const database = getClient<Merchant>(getConnection(), {
   user: 'postgres',
@@ -13,14 +15,23 @@ const database = getClient<Merchant>(getConnection(), {
   port: 5432,
 });
 
-const dependencies = {
+const createCommandDependencies = {
   database,
   generateId,
   generateDate,
 };
 
-export const routes = Router().post(
-  '/',
-  requestBodyValidation(ProposedMerchant),
-  (request, response, next) => create(request, response, next)(dependencies)(),
-);
+const getByIdQueryDependencies = {
+  client: new Client({ node: 'http://localhost:9200' }),
+};
+
+export const routes = Router()
+  .post(
+    '/',
+    requestBodyValidation(CreateMerchantCommand),
+    (request, response, next) =>
+      create(request, response, next)(createCommandDependencies)(),
+  )
+  .get('/:id', (request, response, next) =>
+    getById(request, response, next)(getByIdQueryDependencies)(),
+  );

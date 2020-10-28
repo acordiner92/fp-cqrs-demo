@@ -21,4 +21,7 @@ export const httpErrorResponse = (
 ): IO.IO<Response> =>
   match(error.name)
     .with(AppError.validation, () => sendResponse(response)(400, error.message))
+    .with(AppError.resourceNotFound, () =>
+      sendResponse(response)(404, error.message),
+    )
     .otherwise(() => sendResponse(response)(500, error.message));

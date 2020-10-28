@@ -9,7 +9,8 @@
     "format-check": "prettier --check ./src",
     "lint": "eslint ./src",
     "test": "jest ./test --runInBand",
-    "db:migrate": "ts-node ./src/Postgrator.ts"
+    "db:migrate": "ts-node ./src/Postgrator.ts",
+    "es:migrate": "ts-node ./script/elasticsearch/Setup.ts"
   },
   "repository": {
     "type": "git",

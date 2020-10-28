@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 
-const CreateMerchantCommand = t.type({
+export const CreateMerchantCommand = t.type({
   status: t.string,
   currency: t.string,
   websiteUrl: t.string,
@@ -9,7 +9,7 @@ const CreateMerchantCommand = t.type({
 });
 export type CreateMerchantCommand = t.TypeOf<typeof CreateMerchantCommand>;
 
-const UpdateMerchantCommand = t.type({
+export const UpdateMerchantCommand = t.type({
   id: t.string,
   status: t.string,
   currency: t.string,
