@@ -1,4 +1,3 @@
-import { constVoid } from 'fp-ts/lib/function';
 import { pipe } from 'fp-ts/lib/pipeable';
 import * as R from 'fp-ts/lib/Reader';
 import * as TE from 'fp-ts/lib/TaskEither';
@@ -19,16 +18,16 @@ export const onMerchantCreatedProjection = (): R.Reader<
             () =>
               deps.client.index({
                 index: 'merchant',
-                type: 'merchant',
+                id: m.id,
                 body: m,
               }),
             error => new Error(`${error}`),
           ),
           TE.fold(
             error => T.of(Logger.error(error)),
-            m => T.of(Logger.error(m)),
+            m => T.of(Logger.info(m)),
           ),
-        ),
+        )(),
       ),
     ),
   );

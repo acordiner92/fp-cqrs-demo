@@ -15,6 +15,10 @@ export type GetByIdQueryDependencies = {
   readonly client: Client;
 };
 
+export type GetByCountryQueryDependencies = {
+  readonly client: Client;
+};
+
 export type ProjectionDependencies = {
   readonly client: Client;
   readonly merchantEventEmitter: MerchantEventEmitter;

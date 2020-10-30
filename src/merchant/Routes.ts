@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { create, getById } from './MerchantController';
+import { create, getByCountry, getById } from './MerchantController';
 import { requestBodyValidation } from '../middleware/RequestBodyValidation';
 import { Merchant } from './Merchant';
 import { CreateMerchantCommand } from './Commands';
@@ -30,6 +30,10 @@ const getByIdQueryDependencies = {
   client: new Client({ node: 'http://localhost:9200' }),
 };
 
+const getByCountryDependencies = {
+  client: new Client({ node: 'http://localhost:9200' }),
+};
+
 const projectionDependencies = {
   merchantEventEmitter: merchantEventEmitterInst,
   client: new Client({ node: 'http://localhost:9200' }),
@@ -47,4 +51,7 @@ export const routes = Router()
   )
   .get('/:id', (request, response, next) =>
     getById(request, response, next)(getByIdQueryDependencies)(),
+  )
+  .get('/', (request, response, next) =>
+    getByCountry(request, response, next)(getByCountryDependencies)(),
   );

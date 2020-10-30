@@ -13,7 +13,7 @@ export type MerchantEventEmitter = {
   readonly onMerchantCreated: (func: OnMerchantCreated) => IO.IO<void>;
 };
 
-type OnMerchantCreated = (merchant: Merchant) => T.Task<void>;
+type OnMerchantCreated = (merchant: Merchant) => Promise<void>;
 export const merchantEventEmitter = (): MerchantEventEmitter => {
   const eventEmitter = new EventEmitter();
 
