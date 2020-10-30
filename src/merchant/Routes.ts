@@ -5,7 +5,11 @@ import { Merchant } from './Merchant';
 import { CreateMerchantCommand } from './Commands';
 import { getClient, getConnection } from '../PostgresConnection';
 import { generateDate, generateId } from '../IoUtils';
+import { merchantEventEmitter } from './Events';
 import { Client } from '@elastic/elasticsearch';
+import { onMerchantCreatedProjection } from './ProjectionHandler';
+
+const merchantEventEmitterInst = merchantEventEmitter();
 
 const database = getClient<Merchant>(getConnection(), {
   user: 'postgres',
@@ -17,6 +21,7 @@ const database = getClient<Merchant>(getConnection(), {
 
 const createCommandDependencies = {
   database,
+  merchantEventEmitter: merchantEventEmitterInst,
   generateId,
   generateDate,
 };
@@ -24,6 +29,14 @@ const createCommandDependencies = {
 const getByIdQueryDependencies = {
   client: new Client({ node: 'http://localhost:9200' }),
 };
+
+const projectionDependencies = {
+  merchantEventEmitter: merchantEventEmitterInst,
+  client: new Client({ node: 'http://localhost:9200' }),
+};
+
+// eslint-disable-next-line functional/no-expression-statement
+onMerchantCreatedProjection()(projectionDependencies);
 
 export const routes = Router()
   .post(
